@@ -1,6 +1,6 @@
 {
     "name": "event-system.bs.js",
-    "version": "1.0.0",
+    "version": "1.0.2",
     "description": "Contains a Command bus for handling commands",
     "repository": "statistisches-amt-basel-stadt/command-hanlder.bs.js",
     "license": "MIT",
@@ -22,7 +22,7 @@
         "dev": "nuxi dev playground",
         "dev:build": "nuxi build playground",
         "dev:prepare": "nuxt-module-build build --stub && nuxt-module-build prepare && nuxi prepare playground",
-        "release": "bun lint && bun test && bun prepack && changelogen --release && bun publish && git push --follow-tags",
+        "release": "bun lint && bun test && bun prepack && changelogen --release && git push --follow-tags",
         "lint": "eslint .",
         "test": "vitest run",
         "test:watch": "vitest watch",
