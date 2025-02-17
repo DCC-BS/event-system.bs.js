@@ -1,0 +1,48 @@
+{
+    "name": "event-system.bs.js",
+    "version": "1.0.0",
+    "description": "Contains a Command bus for handling commands",
+    "repository": "statistisches-amt-basel-stadt/command-hanlder.bs.js",
+    "license": "MIT",
+    "type": "module",
+    "exports": {
+        ".": {
+            "types": "./dist/types.d.ts",
+            "import": "./dist/module.mjs",
+            "require": "./dist/module.cjs"
+        }
+    },
+    "main": "./dist/module.cjs",
+    "types": "./dist/types.d.ts",
+    "files": [
+        "dist"
+    ],
+    "scripts": {
+        "prepack": "nuxt-module-build build",
+        "dev": "nuxi dev playground",
+        "dev:build": "nuxi build playground",
+        "dev:prepare": "nuxt-module-build build --stub && nuxt-module-build prepare && nuxi prepare playground",
+        "release": "bun lint && bun test && bun prepack && changelogen --release && bun publish && git push --follow-tags",
+        "lint": "eslint .",
+        "test": "vitest run",
+        "test:watch": "vitest watch",
+        "test:types": "vue-tsc --noEmit && cd playground && vue-tsc --noEmit"
+    },
+    "dependencies": {
+        "@nuxt/kit": "^3.15.4"
+    },
+    "devDependencies": {
+        "@nuxt/devtools": "^2.0.0",
+        "@nuxt/eslint-config": "^1.0.1",
+        "@nuxt/module-builder": "^0.8.4",
+        "@nuxt/schema": "^3.15.4",
+        "@nuxt/test-utils": "^3.15.4",
+        "@types/node": "latest",
+        "changelogen": "^0.5.7",
+        "eslint": "^9.20.1",
+        "nuxt": "^3.15.4",
+        "typescript": "~5.7.3",
+        "vitest": "^3.0.5",
+        "vue-tsc": "^2.2.0"
+    }
+}
