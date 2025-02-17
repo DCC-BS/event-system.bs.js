@@ -38,5 +38,8 @@ jobs:
       - name: Install dependencies
         run: npx nypm@latest i
 
+      - name: generate nuxt
+        run: npx nuxi generate
+
       - name: Test
         run: npm run test
