@@ -23,7 +23,6 @@ jobs:
       - run: bun install
       - run: bun generate
       - run: bun test
-      - run: bun run prepack
       - run: bun publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
