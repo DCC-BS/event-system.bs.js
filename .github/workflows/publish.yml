@@ -20,10 +20,9 @@ jobs:
           registry-url: "https://npm.pkg.github.com"
       - name: Install Bun
         run: npm install -g bun
-      - run: bun add -g @nuxt/module-builder
       - run: bun install
       - run: bun generate
       - run: bun test
-      - run: bun publish
+      - run: npm publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
