@@ -1,4 +1,4 @@
-import { defineNuxtModule, addImportsDir } from '@nuxt/kit';
+import { defineNuxtModule, createResolver, addImportsDir, addTypeTemplate } from '@nuxt/kit';
 
 const module = defineNuxtModule({
   meta: {
@@ -8,7 +8,9 @@ const module = defineNuxtModule({
   // Default configuration options of the Nuxt module
   defaults: {},
   setup(_options, _nuxt) {
-    addImportsDir("./runtime/composables");
+    const resolver = createResolver(import.meta.url);
+    addImportsDir(resolver.resolve("./runtime/composables"));
+    addTypeTemplate({ filename: "types/commands.d.ts", src: resolver.resolve("./runtime/models/commands.d.ts") });
   }
 });
 
