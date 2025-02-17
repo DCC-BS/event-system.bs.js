@@ -1,9 +1,0 @@
-{
-  "name": "command-handler.bs.js",
-  "configKey": "command-handler.bs.js",
-  "version": "1.0.1",
-  "builder": {
-    "@nuxt/module-builder": "0.8.4",
-    "unbuild": "2.0.0"
-  }
-}
