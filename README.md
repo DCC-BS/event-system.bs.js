@@ -68,3 +68,9 @@ const { executeCommand } = useCommandBus();
 
 executeCommand(new MyCommand('prop value'));
 ```
+
+## Release a new Version
+Commit your changes and then:
+```sh
+bun release
+```
