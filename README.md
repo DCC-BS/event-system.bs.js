@@ -1,84 +1,70 @@
-<!--
-Get your module up and running quickly.
+# event-system.bs.js
 
-Find and replace all on all files (CMD+SHIFT+F):
-- Name: My Module
-- Package name: my-module
-- Description: My new Nuxt module
--->
+![GitHub package.json version](https://img.shields.io/github/package-json/v/DCC-BS/event-system.bs.js)
+![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/DCC-BS/event-system.bs.js/publish.yml)
 
-# My Module
-
-[![npm version][npm-version-src]][npm-version-href]
-[![npm downloads][npm-downloads-src]][npm-downloads-href]
-[![License][license-src]][license-href]
-[![Nuxt][nuxt-src]][nuxt-href]
-
-My new Nuxt module for doing amazing things.
-
-- [✨ &nbsp;Release Notes](/CHANGELOG.md)
-<!-- - [🏀 Online playground](https://stackblitz.com/github/your-org/my-module?file=playground%2Fapp.vue) -->
-<!-- - [📖 &nbsp;Documentation](https://example.com) -->
-
-## Features
-
-<!-- Highlight some of the features your module provide here -->
-- ⛰ &nbsp;Foo
-- 🚠 &nbsp;Bar
-- 🌲 &nbsp;Baz
+`event-system.bs.js` is an package that provides a Command Bus for handling commands in your application. This package is designed to be used to manage and execute commands in a structured and efficient manner.
 
 ## Quick Setup
 
-Install the module to your Nuxt application with one command:
+To install the module create a `.npmrc` next to your `package.json` file:
 
-```bash
-npx nuxi module add my-module
+```txt
+//npm.pkg.github.com/:_authToken=${GITHUB_TOKEN}
+@dcc-bs:registry=https://npm.pkg.github.com
 ```
 
-That's it! You can now use My Module in your Nuxt app ✨
+Create a github [personal access token (classic)](https://github.com/settings/tokens/new) with `read:packages` permissions and add it to your `.env` file:
+
+```txt
+GITHUB_TOKEN='YOUR_TOKEN'
+```
+
+Install the module to your Nuxt application with:
+
+```bash
+bun x nuxi module add @dcc-bs/event-system.bs.js
+```
+
+That's it! You can now use event-system.bs.js in your Nuxt app ✨
+
+## Usage
+### Registering a Command Handler
+To register a command handler, use the registerHandler method use the `useCommandBus` composable:
+
+```ts
+import type { ICommand } from "#build/types/commands";
+
+class MyCommand implements ICommand {
+    readonly $type = "MyCommand";
+
+    constructor(
+        public myProperty: string) {
+    }
+}
 
 
-## Contribution
+const { registerHandler, unregisterHandler } = useCommandBus();
 
-<details>
-  <summary>Local development</summary>
-  
-  ```bash
-  # Install dependencies
-  npm install
-  
-  # Generate type stubs
-  npm run dev:prepare
-  
-  # Develop with the playground
-  npm run dev
-  
-  # Build the playground
-  npm run dev:build
-  
-  # Run ESLint
-  npm run lint
-  
-  # Run Vitest
-  npm run test
-  npm run test:watch
-  
-  # Release new version
-  npm run release
-  ```
+onMounted(() =>{
+    registerHandler('MyCommand', handleCommand);
+});
 
-</details>
+onUnmounted(() =>{
+    unregisterHandler('MyCommand', handleCommand);
+});
+
+async function handleCommand(command: MyCommand){ 
+    // Handle the commadn
+}
+```
 
 
-<!-- Badges -->
-[npm-version-src]: https://img.shields.io/npm/v/my-module/latest.svg?style=flat&colorA=020420&colorB=00DC82
-[npm-version-href]: https://npmjs.com/package/my-module
+## Executing a Command
+To execute a command, use the executeCommand method:
 
-[npm-downloads-src]: https://img.shields.io/npm/dm/my-module.svg?style=flat&colorA=020420&colorB=00DC82
-[npm-downloads-href]: https://npm.chart.dev/my-module
+```ts
+const { executeCommand } = useCommandBus();
 
-[license-src]: https://img.shields.io/npm/l/my-module.svg?style=flat&colorA=020420&colorB=00DC82
-[license-href]: https://npmjs.com/package/my-module
-
-[nuxt-src]: https://img.shields.io/badge/Nuxt-020420?logo=nuxt.js
-[nuxt-href]: https://nuxt.com
+executeCommand(new MyCommand('prop value'));
+```
