@@ -2,6 +2,7 @@
 
 ![GitHub package.json version](https://img.shields.io/github/package-json/v/DCC-BS/event-system.bs.js)
 ![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/DCC-BS/event-system.bs.js/publish.yml)
+[![codecov](https://codecov.io/gh/DCC-BS/event-system.bs.js/graph/badge.svg?token=3PBNL8OR24)](https://codecov.io/gh/DCC-BS/event-system.bs.js)
 
 `event-system.bs.js` is an package that provides a Command Bus for handling commands in your application. This package is designed to be used to manage and execute commands in a structured and efficient manner.
 
