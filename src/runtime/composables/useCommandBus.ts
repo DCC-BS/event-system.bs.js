@@ -1,6 +1,6 @@
 import { CommandBus } from "../services/command-bus";
 
-const commandBus = new CommandBus();
+const _commandBus = new CommandBus();
 
 /**
  * Provides methods to interact with the command bus.
@@ -8,7 +8,7 @@ const commandBus = new CommandBus();
  * @returns An object containing methods to register, unregister, and execute commands.
  */
 export const useCommandBus = () => {
-    const bus = commandBus;
+    const bus = _commandBus;
 
     return {
         /**
@@ -32,6 +32,11 @@ export const useCommandBus = () => {
          *
          * @param command - The command to execute.
          */
-        executeCommand: bus.executeCommand.bind(bus)
+        executeCommand: bus.executeCommand.bind(bus),
+
+        /**
+         * Gets the command bus.
+         */
+        bus: _commandBus,
     }
 }

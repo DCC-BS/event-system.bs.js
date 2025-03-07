@@ -1,4 +1,5 @@
-import type { CommandType, ICommand } from "../models/commands";
+import type { CommandType, ICommand, IReversibleCommand } from "../models/commands";
+import { CommandHistoryManager } from "./command-history-manager";
 
 export type CommandHandler<TCommand extends ICommand> = (command: TCommand) => Promise<void>;
 
@@ -7,6 +8,11 @@ export type CommandHandler<TCommand extends ICommand> = (command: TCommand) => P
  */
 export class CommandBus {
     private commandHandlers = {} as Record<CommandType, CommandHandler<ICommand>[]>;
+    private readonly _historyManager = new CommandHistoryManager(this);
+
+    public get historyManager() {
+        return this._historyManager;
+    }
 
     /**
      * Registers a handler for a specific command type.
@@ -16,7 +22,7 @@ export class CommandBus {
      */
     public registerHandler<TCommand extends ICommand>(commandType: CommandType, handler: CommandHandler<TCommand>) {
         this.commandHandlers[commandType] = this.commandHandlers[commandType] || [];
-        this.commandHandlers[commandType].push(handler);
+        this.commandHandlers[commandType].push(handler as CommandHandler<ICommand>);
     }
 
     /**
@@ -28,7 +34,7 @@ export class CommandBus {
     public unregisterHandler<TCommand extends ICommand>(commandType: CommandType, handler: CommandHandler<TCommand>) {
         const handlers = this.commandHandlers[commandType];
         if (handlers) {
-            const index = handlers.indexOf(handler);
+            const index = handlers.findIndex(h => h === handler);
             if (index >= 0) {
                 handlers.splice(index, 1);
             }
@@ -41,11 +47,26 @@ export class CommandBus {
      * @param command - The command to execute.
      */
     public async executeCommand(command: ICommand) {
-        const handlers = this.commandHandlers[command.$type] as CommandHandler<ICommand>[];
+        const handlers = this.commandHandlers[command.$type];
         if (handlers) {
             for (const handler of handlers) {
                 await handler(command);
             }
+
+            // Add to history if it's a reversible command and implements IUndoCommand
+            if (this._historyManager &&
+                this.isReversibleCommand(command)) {
+                this._historyManager.addToHistory(command);
+            }
         }
+    }
+
+    /**
+     * Type guard to check if a command is reversible
+     * 
+     * @param command - The command to check
+     */
+    private isReversibleCommand(command: ICommand): command is IReversibleCommand {
+        return '$undoCommand' in command && command.$undoCommand !== undefined;
     }
 }
