@@ -1,5 +1,5 @@
 import type { IReversibleCommand } from "../models/commands";
-import { CommandBus } from "./command-bus";
+import type { CommandBus } from "./command-bus";
 import { ref, readonly } from "vue";
 
 /**

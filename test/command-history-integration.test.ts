@@ -1,16 +1,16 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { CommandBus } from '../src/runtime/services/command-bus';
-import type { IReversibleCommand } from '../src/runtime/models/commands';
+import type { ICommand, IReversibleCommand } from '../src/runtime/models/commands';
 
 // Mock Vue's ref and readonly functions
 vi.mock('vue', () => ({
-    ref: (val: any) => ({ value: val }),
-    readonly: (val: any) => val
+    ref: (val: unknown) => ({ value: val }),
+    readonly: (val: unknown) => val
 }));
 
 describe('Command History Integration Tests', () => {
     let commandBus: CommandBus;
-    let handlerSpy: any;
+    let handlerSpy: (c: ICommand) => Promise<void>;
 
     // Sample reversible command for testing
     const reversibleCommand: IReversibleCommand = {

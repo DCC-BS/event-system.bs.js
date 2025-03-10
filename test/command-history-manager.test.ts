@@ -5,8 +5,8 @@ import type { IReversibleCommand } from '../src/runtime/models/commands';
 
 // Mock Vue's ref and readonly functions
 vi.mock('vue', () => ({
-    ref: (val: any) => ({ value: val }),
-    readonly: (val: any) => val
+    ref: (val: unknown) => ({ value: val }),
+    readonly: (val: unknown) => val
 }));
 
 describe('CommandHistoryManager', () => {
