@@ -32,11 +32,11 @@ export const useCommandHistory = () => {
         /**
          * Checks if undo operation is available
          */
-        canUndo: bus.historyManager.canUndo.bind(bus.historyManager),
+        canUndo: bus.historyManager.canUndo,
         /**
          * Checks if redo operation is available
          */
-        canRedo: bus.historyManager.canRedo.bind(bus.historyManager),
+        canRedo: bus.historyManager.canRedo,
         /**
          * Clears the undo and redo stacks
          */

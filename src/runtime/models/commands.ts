@@ -9,5 +9,5 @@ export interface ICommand {
  */
 export interface IReversibleCommand extends ICommand {
     // The undo command that will reverse this command's effects
-    readonly $undoCommand: ICommand;
+    readonly $undoCommand: ICommand | undefined;
 }

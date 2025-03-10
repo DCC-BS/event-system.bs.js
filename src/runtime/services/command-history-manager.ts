@@ -10,6 +10,9 @@ export class CommandHistoryManager {
     private readonly _undoStack: Ref<IReversibleCommand[]> = ref([]);
     private readonly _redoStack: Ref<IReversibleCommand[]> = ref([]);
 
+    public canUndo = ref(false);
+    public canRedo = ref(false);
+
     public get undoStack() {
         return readonly(this._undoStack);
     }
@@ -45,6 +48,8 @@ export class CommandHistoryManager {
         if (this._undoStack.value.length > this.maxHistorySize) {
             this._undoStack.value.shift(); // Remove oldest command
         }
+
+        this.updateCanUndoReod();
     }
 
     /**
@@ -64,6 +69,8 @@ export class CommandHistoryManager {
 
         // Execute the undo command
         await this.commandBus.executeCommand(command.$undoCommand, false);
+
+        this.updateCanUndoReod();
 
         return true;
     }
@@ -86,21 +93,14 @@ export class CommandHistoryManager {
         // Re-execute the original command
         await this.commandBus.executeCommand(command, false);
 
+        this.updateCanUndoReod();
+
         return true;
     }
 
-    /**
-     * Checks if undo operation is available
-     */
-    public canUndo(): boolean {
-        return this._undoStack.value.length > 0;
-    }
-
-    /**
-     * Checks if redo operation is available
-     */
-    public canRedo(): boolean {
-        return this._redoStack.value.length > 0;
+    updateCanUndoReod() {
+        this.canUndo.value = this._undoStack.value.length > 0;
+        this.canRedo.value = this._redoStack.value.length > 0;
     }
 
     /**
