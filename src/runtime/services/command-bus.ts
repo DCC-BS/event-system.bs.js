@@ -46,7 +46,7 @@ export class CommandBus {
      *
      * @param command - The command to execute.
      */
-    public async executeCommand(command: ICommand) {
+    public async executeCommand(command: ICommand, history = true) {
         const handlers = this.commandHandlers[command.$type];
         if (handlers) {
             for (const handler of handlers) {
@@ -54,7 +54,7 @@ export class CommandBus {
             }
 
             // Add to history if it's a reversible command and implements IUndoCommand
-            if (this._historyManager &&
+            if (history && this._historyManager &&
                 this.isReversibleCommand(command)) {
                 this._historyManager.addToHistory(command);
             }

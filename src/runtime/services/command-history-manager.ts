@@ -1,6 +1,6 @@
 import type { IReversibleCommand } from "../models/commands";
 import { CommandBus } from "./command-bus";
-import { ref } from "vue";
+import { ref, readonly } from "vue";
 
 /**
  * CommandHistoryManager maintains undo and redo stacks for commands
@@ -63,7 +63,7 @@ export class CommandHistoryManager {
         this._redoStack.value.push(command);
 
         // Execute the undo command
-        await this.commandBus.executeCommand(command.$undoCommand);
+        await this.commandBus.executeCommand(command.$undoCommand, false);
 
         return true;
     }
@@ -84,7 +84,7 @@ export class CommandHistoryManager {
         this._undoStack.value.push(command);
 
         // Re-execute the original command
-        await this.commandBus.executeCommand(command);
+        await this.commandBus.executeCommand(command, false);
 
         return true;
     }
