@@ -1,5 +1,19 @@
 # Changelog
 
+## v1.1.1
+
+[compare changes](https://github.com/DCC-BS/event-system.bs.js/compare/v1.1.0...v1.1.1)
+
+### 🩹 Fixes
+
+- Update publish workflow to use 'bun run test' for running tests ([b3a74ed](https://github.com/DCC-BS/event-system.bs.js/commit/b3a74ed))
+- Simplify canUndo and canRedo methods and update command history state management ([a90957b](https://github.com/DCC-BS/event-system.bs.js/commit/a90957b))
+- Correct method name from updateCanUndoReod to updateCanUndoRedo and ensure proper state updates in command history ([cf3879c](https://github.com/DCC-BS/event-system.bs.js/commit/cf3879c))
+
+### ❤️ Contributors
+
+- Tobias Bollinger <tobias.bollinger@gmail.com>
+
 ## v1.1.0
 
 [compare changes](https://github.com/DCC-BS/event-system.bs.js/compare/v1.0.3...v1.1.0)
