@@ -1,16 +1,17 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { describe, it, expect, vi, beforeEach, type Mock } from 'vitest';
 import { CommandBus } from '../src/runtime/services/command-bus';
 import type { ICommand, IReversibleCommand } from '../src/runtime/models/commands';
 
 // Mock Vue's ref and readonly functions
 vi.mock('vue', () => ({
     ref: (val: unknown) => ({ value: val }),
-    readonly: (val: unknown) => val
+    readonly: (val: unknown) => val,
+    computed: (fn: () => unknown) => fn()
 }));
 
 describe('Command History Integration Tests', () => {
     let commandBus: CommandBus;
-    let handlerSpy: (c: ICommand) => Promise<void>;
+    let handlerSpy: Mock<(c: ICommand) => Promise<void>>;
 
     // Sample reversible command for testing
     const reversibleCommand: IReversibleCommand = {
@@ -107,8 +108,8 @@ describe('Command History Integration Tests', () => {
         // Register handlers
         commandBus.registerHandler('Command1', handlerSpy);
         commandBus.registerHandler('Command2', handlerSpy);
-        commandBus.registerHandler(command1.$undoCommand.$type, handlerSpy);
-        commandBus.registerHandler(command2.$undoCommand.$type, handlerSpy);
+        commandBus.registerHandler(command1.$undoCommand!.$type, handlerSpy);
+        commandBus.registerHandler(command2.$undoCommand!.$type, handlerSpy);
 
         // Execute commands and perform undo/redo operations
         await commandBus.executeCommand(command1);

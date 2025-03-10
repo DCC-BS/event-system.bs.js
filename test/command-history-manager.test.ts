@@ -3,12 +3,6 @@ import { CommandHistoryManager } from '../src/runtime/services/command-history-m
 import { CommandBus } from '../src/runtime/services/command-bus';
 import type { IReversibleCommand } from '../src/runtime/models/commands';
 
-// Mock Vue's ref and readonly functions
-vi.mock('vue', () => ({
-    ref: (val: unknown) => ({ value: val }),
-    readonly: (val: unknown) => val
-}));
-
 describe('CommandHistoryManager', () => {
     // Test setup variables
     let commandBus: CommandBus;
@@ -47,7 +41,7 @@ describe('CommandHistoryManager', () => {
 
         // Verify the command was added to the undo stack
         expect(historyManager.undoStack.value).toHaveLength(1);
-        expect(historyManager.undoStack.value[0]).toBe(testCommand);
+        expect(historyManager.undoStack.value[0]).toEqual(testCommand);
         expect(historyManager.redoStack.value).toHaveLength(0);
     });
 
@@ -92,7 +86,7 @@ describe('CommandHistoryManager', () => {
         expect(result).toBe(true);
         expect(historyManager.undoStack.value).toHaveLength(0);
         expect(historyManager.redoStack.value).toHaveLength(1);
-        expect(historyManager.redoStack.value[0]).toBe(testCommand);
+        expect(historyManager.redoStack.value[0]).toEqual(testCommand);
 
         // Verify undo command was executed
         expect(commandBus.executeCommand).toHaveBeenCalledWith(testCommand.$undoCommand, false);

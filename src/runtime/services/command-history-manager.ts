@@ -1,6 +1,6 @@
 import type { IReversibleCommand } from "../models/commands";
 import type { CommandBus } from "./command-bus";
-import { ref, readonly } from "vue";
+import { ref, readonly, computed } from "vue";
 
 /**
  * CommandHistoryManager maintains undo and redo stacks for commands
@@ -10,8 +10,8 @@ export class CommandHistoryManager {
     private readonly _undoStack: Ref<IReversibleCommand[]> = ref([]);
     private readonly _redoStack: Ref<IReversibleCommand[]> = ref([]);
 
-    public canUndo = ref(false);
-    public canRedo = ref(false);
+    public canUndo = computed(() => this._undoStack.value.length > 0);
+    public canRedo = computed(() => this._redoStack.value.length > 0);
 
     public get undoStack() {
         return readonly(this._undoStack);
@@ -48,8 +48,6 @@ export class CommandHistoryManager {
         if (this._undoStack.value.length > this.maxHistorySize) {
             this._undoStack.value.shift(); // Remove oldest command
         }
-
-        this.updateCanUndoRedo();
     }
 
     /**
@@ -61,7 +59,6 @@ export class CommandHistoryManager {
         const command = this._undoStack.value.pop();
 
         if (!command?.$undoCommand) {
-            this.updateCanUndoRedo();
             return false; // Nothing to undo or command is not undoable
         }
 
@@ -70,8 +67,6 @@ export class CommandHistoryManager {
 
         // Execute the undo command
         await this.commandBus.executeCommand(command.$undoCommand, false);
-
-        this.updateCanUndoRedo();
 
         return true;
     }
@@ -85,7 +80,6 @@ export class CommandHistoryManager {
         const command = this._redoStack.value.pop();
 
         if (!command) {
-            this.updateCanUndoRedo();
             return false; // Nothing to redo
         }
 
@@ -95,14 +89,7 @@ export class CommandHistoryManager {
         // Re-execute the original command
         await this.commandBus.executeCommand(command, false);
 
-        this.updateCanUndoRedo();
-
         return true;
-    }
-
-    updateCanUndoRedo() {
-        this.canUndo.value = this._undoStack.value.length > 0;
-        this.canRedo.value = this._redoStack.value.length > 0;
     }
 
     /**
