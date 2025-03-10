@@ -49,7 +49,7 @@ export class CommandHistoryManager {
             this._undoStack.value.shift(); // Remove oldest command
         }
 
-        this.updateCanUndoReod();
+        this.updateCanUndoRedo();
     }
 
     /**
@@ -61,6 +61,7 @@ export class CommandHistoryManager {
         const command = this._undoStack.value.pop();
 
         if (!command?.$undoCommand) {
+            this.updateCanUndoRedo();
             return false; // Nothing to undo or command is not undoable
         }
 
@@ -70,7 +71,7 @@ export class CommandHistoryManager {
         // Execute the undo command
         await this.commandBus.executeCommand(command.$undoCommand, false);
 
-        this.updateCanUndoReod();
+        this.updateCanUndoRedo();
 
         return true;
     }
@@ -84,6 +85,7 @@ export class CommandHistoryManager {
         const command = this._redoStack.value.pop();
 
         if (!command) {
+            this.updateCanUndoRedo();
             return false; // Nothing to redo
         }
 
@@ -93,12 +95,12 @@ export class CommandHistoryManager {
         // Re-execute the original command
         await this.commandBus.executeCommand(command, false);
 
-        this.updateCanUndoReod();
+        this.updateCanUndoRedo();
 
         return true;
     }
 
-    updateCanUndoReod() {
+    updateCanUndoRedo() {
         this.canUndo.value = this._undoStack.value.length > 0;
         this.canRedo.value = this._redoStack.value.length > 0;
     }

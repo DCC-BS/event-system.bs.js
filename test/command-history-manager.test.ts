@@ -51,10 +51,10 @@ describe('CommandHistoryManager', () => {
         expect(historyManager.redoStack.value).toHaveLength(0);
     });
 
-    it('should clear redo stack when new command is added', () => {
+    it('should clear redo stack when new command is added', async () => {
         // Setup: Add a command and perform undo to populate redo stack
         historyManager.addToHistory(testCommand);
-        historyManager.undo();
+        await historyManager.undo();
 
         // Verify redo stack is populated
         expect(historyManager.redoStack.value).toHaveLength(1);
@@ -133,20 +133,20 @@ describe('CommandHistoryManager', () => {
         expect(commandBus.executeCommand).not.toHaveBeenCalled();
     });
 
-    it('should check if can undo/redo', () => {
+    it('should check if can undo/redo', async () => {
         // Initially both stacks are empty
-        expect(historyManager.canUndo()).toBe(false);
-        expect(historyManager.canRedo()).toBe(false);
+        expect(historyManager.canUndo.value).toBe(false);
+        expect(historyManager.canRedo.value).toBe(false);
 
         // Add a command
         historyManager.addToHistory(testCommand);
-        expect(historyManager.canUndo()).toBe(true);
-        expect(historyManager.canRedo()).toBe(false);
+        expect(historyManager.canUndo.value).toBe(true);
+        expect(historyManager.canRedo.value).toBe(false);
 
         // Undo the command
-        historyManager.undo();
-        expect(historyManager.canUndo()).toBe(false);
-        expect(historyManager.canRedo()).toBe(true);
+        await historyManager.undo();
+        expect(historyManager.canUndo.value).toBe(false);
+        expect(historyManager.canRedo.value).toBe(true);
     });
 
     it('should clear history', () => {
