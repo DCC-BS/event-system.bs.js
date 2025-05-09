@@ -1,5 +1,25 @@
 # Changelog
 
+## v1.2.0
+
+[compare changes](https://github.com/DCC-BS/event-system.bs.js/compare/v1.1.1...v1.2.0)
+
+### 🚀 Enhancements
+
+- Add onCommand method for registering command handlers with automatic unregistration on component unmount ([ed7e5fa](https://github.com/DCC-BS/event-system.bs.js/commit/ed7e5fa))
+
+### 🩹 Fixes
+
+- Enhance command history management by using computed properties for canUndo and canRedo, and improve type safety for undo/redo stacks ([24d5ccd](https://github.com/DCC-BS/event-system.bs.js/commit/24d5ccd))
+
+### 🏡 Chore
+
+- **release:** V1.1.1 ([7ecf75e](https://github.com/DCC-BS/event-system.bs.js/commit/7ecf75e))
+
+### ❤️ Contributors
+
+- Tobias Bollinger <tobias.bollinger@bs.ch>
+
 ## v1.1.1
 
 [compare changes](https://github.com/DCC-BS/event-system.bs.js/compare/v1.1.0...v1.1.1)

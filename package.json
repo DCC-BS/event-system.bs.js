@@ -1,6 +1,6 @@
 {
     "name": "@dcc-bs/event-system.bs.js",
-    "version": "1.1.1",
+    "version": "1.2.0",
     "description": "Contains a Command bus for handling commands",
     "license": "MIT",
     "type": "module",
