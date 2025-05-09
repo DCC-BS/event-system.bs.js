@@ -1,4 +1,7 @@
 import { CommandBus } from "../services/command-bus";
+import { onUnmounted } from "vue";
+
+type CommandHandler = (command: unknown) => Promise<void>;
 
 const _commandBus = new CommandBus();
 
@@ -9,6 +12,24 @@ const _commandBus = new CommandBus();
  */
 export const useCommandBus = () => {
     const bus = _commandBus;
+
+    const registredHandlers = [] as { key: string; handler: CommandHandler }[];
+
+    function onCommand<TCommand>(
+        commandKey: string,
+        callback: (command: TCommand) => Promise<void>,
+    ) {
+        const castedCallback = callback as CommandHandler;
+        registredHandlers.push({ key: commandKey, handler: castedCallback });
+        bus.registerHandler(commandKey, castedCallback);
+    }
+
+    onUnmounted(() => {
+        for (const { key, handler } of registredHandlers) {
+            bus.unregisterHandler(key, handler);
+        }
+    });
+
 
     return {
         /**
@@ -38,5 +59,13 @@ export const useCommandBus = () => {
          * Gets the command bus.
          */
         bus: _commandBus,
+
+        /**
+         * Registers a command handler with automatic unregistration on component unmount.
+         *
+         * @param commandKey - The key of the command to handle.
+         * @param callback - The handler function to execute when the command is received.
+         */
+        onCommand,
     }
 }
