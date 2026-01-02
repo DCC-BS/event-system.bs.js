@@ -4,9 +4,6 @@
     "description": "Contains a Command bus for handling commands",
     "license": "MIT",
     "type": "module",
-    "publishConfig": {
-        "registry": "https://npm.pkg.github.com/"
-    },
     "exports": {
         ".": {
             "types": "./dist/types.d.mts",
