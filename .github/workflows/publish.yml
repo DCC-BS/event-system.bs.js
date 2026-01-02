@@ -13,3 +13,4 @@ jobs:
             install_command: bun install
             build_command: bun run generate
             prepack_command: bun run prepack
+            publish_command: bun publish --access public
