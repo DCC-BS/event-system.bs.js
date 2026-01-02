@@ -13,13 +13,7 @@
     },
     "files": {
         "ignoreUnknown": false,
-        "includes": [
-            "**",
-            "!.nuxt",
-            "!.output",
-            "!logs",
-            "!tests"
-        ]
+        "includes": ["**", "!.nuxt", "!.output", "!logs", "!tests"]
     },
     "formatter": {
         "enabled": true,
@@ -58,9 +52,7 @@
     },
     "overrides": [
         {
-            "includes": [
-                "**/*.vue"
-            ],
+            "includes": ["**/*.vue"],
             "linter": {
                 "rules": {
                     "correctness": {
@@ -72,10 +64,7 @@
             }
         },
         {
-            "includes": [
-                "**/*.css",
-                "**/*.vue"
-            ],
+            "includes": ["**/*.css", "**/*.vue"],
             "linter": {
                 "rules": {
                     "suspicious": {
@@ -90,9 +79,7 @@
             }
         },
         {
-            "includes": [
-                "**/Onboarding.vue"
-            ],
+            "includes": ["**/Onboarding.vue"],
             "assist": {
                 "enabled": false
             },
