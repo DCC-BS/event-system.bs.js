@@ -20,11 +20,11 @@
         "dist"
     ],
     "scripts": {
-        "prepack": "nuxt-module-build build",
-        "generate": "nuxi generate",
-        "dev": "nuxi dev playground",
-        "dev:build": "nuxi build playground",
-        "dev:prepare": "nuxt-module-build build --stub && nuxt-module-build prepare && nuxi prepare playground",
+        "prepack": "bunx nuxt-module-build build",
+        "generate": "bunx nuxi generate",
+        "dev": "bunx nuxi dev playground",
+        "dev:build": "bunx nuxi build playground",
+        "dev:prepare": "bunx nuxt-module-build build --stub && nuxt-module-build prepare && nuxi prepare playground",
         "release": "bun lint && bun run test && bun prepack && changelogen --release && git push --follow-tags",
         "lint": "biome lint .",
         "check": "biome check --fix .",
