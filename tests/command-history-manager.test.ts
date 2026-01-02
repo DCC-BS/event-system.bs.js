@@ -1,26 +1,26 @@
-import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { CommandHistoryManager } from '../src/runtime/services/command-history-manager';
-import { CommandBus } from '../src/runtime/services/command-bus';
-import type { IReversibleCommand } from '../src/runtime/models/commands';
+import { beforeEach, describe, expect, it, vi } from "vitest";
+import type { IReversibleCommand } from "../src/runtime/models/commands";
+import { CommandBus } from "../src/runtime/services/command-bus";
+import { CommandHistoryManager } from "../src/runtime/services/command-history-manager";
 
-describe('CommandHistoryManager', () => {
+describe("CommandHistoryManager", () => {
     // Test setup variables
     let commandBus: CommandBus;
     let historyManager: CommandHistoryManager;
 
     // Sample commands for testing
     const testCommand: IReversibleCommand = {
-        $type: 'TestCommand',
+        $type: "TestCommand",
         $undoCommand: {
-            $type: 'UndoTestCommand'
-        }
+            $type: "UndoTestCommand",
+        },
     };
 
     const anotherCommand: IReversibleCommand = {
-        $type: 'AnotherCommand',
+        $type: "AnotherCommand",
         $undoCommand: {
-            $type: 'UndoAnotherCommand'
-        }
+            $type: "UndoAnotherCommand",
+        },
     };
 
     beforeEach(() => {
@@ -29,13 +29,15 @@ describe('CommandHistoryManager', () => {
 
         // Create a CommandBus with a mocked executeCommand method
         commandBus = new CommandBus();
-        vi.spyOn(commandBus, 'executeCommand').mockImplementation(async () => { });
+        vi.spyOn(commandBus, "executeCommand").mockImplementation(
+            async () => {},
+        );
 
         // Create the history manager with the mocked command bus
         historyManager = new CommandHistoryManager(commandBus, 5);
     });
 
-    it('should add commands to history', () => {
+    it("should add commands to history", () => {
         // Add a command to history
         historyManager.addToHistory(testCommand);
 
@@ -45,7 +47,7 @@ describe('CommandHistoryManager', () => {
         expect(historyManager.redoStack.value).toHaveLength(0);
     });
 
-    it('should clear redo stack when new command is added', async () => {
+    it("should clear redo stack when new command is added", async () => {
         // Setup: Add a command and perform undo to populate redo stack
         historyManager.addToHistory(testCommand);
         await historyManager.undo();
@@ -60,22 +62,22 @@ describe('CommandHistoryManager', () => {
         expect(historyManager.redoStack.value).toHaveLength(0);
     });
 
-    it('should limit history size', () => {
+    it("should limit history size", () => {
         // Add more commands than the max history size
         for (let i = 0; i < 10; i++) {
             historyManager.addToHistory({
                 ...testCommand,
-                $type: `TestCommand${i}`
+                $type: `TestCommand${i}`,
             });
         }
 
         // Verify history is limited to max size (5)
         expect(historyManager.undoStack.value).toHaveLength(5);
         // First commands should be removed, latest should be kept
-        expect(historyManager.undoStack.value[0].$type).toBe('TestCommand5');
+        expect(historyManager.undoStack.value[0].$type).toBe("TestCommand5");
     });
 
-    it('should perform undo correctly', async () => {
+    it("should perform undo correctly", async () => {
         // Add a command to history
         historyManager.addToHistory(testCommand);
 
@@ -89,10 +91,13 @@ describe('CommandHistoryManager', () => {
         expect(historyManager.redoStack.value[0]).toEqual(testCommand);
 
         // Verify undo command was executed
-        expect(commandBus.executeCommand).toHaveBeenCalledWith(testCommand.$undoCommand, false);
+        expect(commandBus.executeCommand).toHaveBeenCalledWith(
+            testCommand.$undoCommand,
+            false,
+        );
     });
 
-    it('should perform redo correctly', async () => {
+    it("should perform redo correctly", async () => {
         // Setup: Add a command and undo it
         historyManager.addToHistory(testCommand);
         await historyManager.undo();
@@ -106,10 +111,13 @@ describe('CommandHistoryManager', () => {
         expect(historyManager.redoStack.value).toHaveLength(0);
 
         // Verify original command was re-executed
-        expect(commandBus.executeCommand).toHaveBeenCalledWith(testCommand, false);
+        expect(commandBus.executeCommand).toHaveBeenCalledWith(
+            testCommand,
+            false,
+        );
     });
 
-    it('should return false when nothing to undo', async () => {
+    it("should return false when nothing to undo", async () => {
         // Try to undo with empty stack
         const result = await historyManager.undo();
 
@@ -118,7 +126,7 @@ describe('CommandHistoryManager', () => {
         expect(commandBus.executeCommand).not.toHaveBeenCalled();
     });
 
-    it('should return false when nothing to redo', async () => {
+    it("should return false when nothing to redo", async () => {
         // Try to redo with empty stack
         const result = await historyManager.redo();
 
@@ -127,7 +135,7 @@ describe('CommandHistoryManager', () => {
         expect(commandBus.executeCommand).not.toHaveBeenCalled();
     });
 
-    it('should check if can undo/redo', async () => {
+    it("should check if can undo/redo", async () => {
         // Initially both stacks are empty
         expect(historyManager.canUndo.value).toBe(false);
         expect(historyManager.canRedo.value).toBe(false);
@@ -143,7 +151,7 @@ describe('CommandHistoryManager', () => {
         expect(historyManager.canRedo.value).toBe(true);
     });
 
-    it('should clear history', () => {
+    it("should clear history", () => {
         // Add commands to both stacks
         historyManager.addToHistory(testCommand);
         historyManager.addToHistory(anotherCommand);

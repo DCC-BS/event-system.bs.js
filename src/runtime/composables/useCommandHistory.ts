@@ -7,7 +7,7 @@ import { useCommandBus } from "./useCommandBus";
 
 /**
  * A composable that provides access to the command history functionality.
- * 
+ *
  * @returns {object} An object containing history stacks and methods for undo/redo operations
  */
 export const useCommandHistory = () => {
@@ -42,5 +42,5 @@ export const useCommandHistory = () => {
          * Clears the undo and redo stacks
          */
         clearHistory: bus.historyManager.clearHistory.bind(bus.historyManager),
-    }
-}
+    };
+};

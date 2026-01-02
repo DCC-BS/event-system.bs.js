@@ -1,6 +1,6 @@
+import { computed, type Ref, readonly, ref } from "vue";
 import type { IReversibleCommand } from "../models/commands";
 import type { CommandBus } from "./command-bus";
-import { ref, readonly, computed } from "vue";
 
 /**
  * CommandHistoryManager maintains undo and redo stacks for commands
@@ -23,18 +23,18 @@ export class CommandHistoryManager {
 
     /**
      * Creates a new CommandHistoryManager
-     * 
+     *
      * @param commandBus - The command bus to use for executing undo/redo commands
      * @param maxHistorySize - Optional maximum size for history stacks (default: 100)
      */
     constructor(
         private readonly commandBus: CommandBus,
-        private readonly maxHistorySize: number = 100
-    ) { }
+        private readonly maxHistorySize: number = 100,
+    ) {}
 
     /**
      * Adds a command to the history for potential undoing later
-     * 
+     *
      * @param command - The command to add to history
      */
     public addToHistory(command: IReversibleCommand): void {
@@ -52,7 +52,7 @@ export class CommandHistoryManager {
 
     /**
      * Undoes the most recent command in history if possible
-     * 
+     *
      * @returns Promise that resolves when the undo operation completes
      */
     public async undo(): Promise<boolean> {
@@ -73,7 +73,7 @@ export class CommandHistoryManager {
 
     /**
      * Redoes the most recently undone command if possible
-     * 
+     *
      * @returns Promise that resolves when the redo operation completes
      */
     public async redo(): Promise<boolean> {

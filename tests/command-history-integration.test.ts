@@ -1,24 +1,27 @@
-import { describe, it, expect, vi, beforeEach, type Mock } from 'vitest';
-import { CommandBus } from '../src/runtime/services/command-bus';
-import type { ICommand, IReversibleCommand } from '../src/runtime/models/commands';
+import { beforeEach, describe, expect, it, type Mock, vi } from "vitest";
+import type {
+    ICommand,
+    IReversibleCommand,
+} from "../src/runtime/models/commands";
+import { CommandBus } from "../src/runtime/services/command-bus";
 
 // Mock Vue's ref and readonly functions
-vi.mock('vue', () => ({
+vi.mock("vue", () => ({
     ref: (val: unknown) => ({ value: val }),
     readonly: (val: unknown) => val,
-    computed: (fn: () => unknown) => fn()
+    computed: (fn: () => unknown) => fn(),
 }));
 
-describe('Command History Integration Tests', () => {
+describe("Command History Integration Tests", () => {
     let commandBus: CommandBus;
     let handlerSpy: Mock<(c: ICommand) => Promise<void>>;
 
     // Sample reversible command for testing
     const reversibleCommand: IReversibleCommand = {
-        $type: 'TestCommand',
+        $type: "TestCommand",
         $undoCommand: {
-            $type: 'UndoTestCommand',
-        }
+            $type: "UndoTestCommand",
+        },
     };
 
     beforeEach(() => {
@@ -29,11 +32,11 @@ describe('Command History Integration Tests', () => {
         handlerSpy = vi.fn();
 
         // Register handlers for our test commands
-        commandBus.registerHandler('TestCommand', handlerSpy);
-        commandBus.registerHandler('UndoTestCommand', handlerSpy);
+        commandBus.registerHandler("TestCommand", handlerSpy);
+        commandBus.registerHandler("UndoTestCommand", handlerSpy);
     });
 
-    it('should add reversible commands to history when executed', async () => {
+    it("should add reversible commands to history when executed", async () => {
         // Execute a reversible command
         await commandBus.executeCommand(reversibleCommand);
 
@@ -42,10 +45,12 @@ describe('Command History Integration Tests', () => {
 
         // Verify the command was added to history
         expect(commandBus.historyManager.undoStack.value).toHaveLength(1);
-        expect(commandBus.historyManager.undoStack.value[0]).toBe(reversibleCommand);
+        expect(commandBus.historyManager.undoStack.value[0]).toBe(
+            reversibleCommand,
+        );
     });
 
-    it('should execute undo command when undo is called', async () => {
+    it("should execute undo command when undo is called", async () => {
         // Execute a reversible command
         await commandBus.executeCommand(reversibleCommand);
 
@@ -63,7 +68,7 @@ describe('Command History Integration Tests', () => {
         expect(commandBus.historyManager.redoStack.value).toHaveLength(1);
     });
 
-    it('should re-execute original command when redo is called', async () => {
+    it("should re-execute original command when redo is called", async () => {
         // Execute a reversible command and then undo it
         await commandBus.executeCommand(reversibleCommand);
         await commandBus.historyManager.undo();
@@ -82,15 +87,15 @@ describe('Command History Integration Tests', () => {
         expect(commandBus.historyManager.redoStack.value).toHaveLength(0);
     });
 
-    it('should not add non-reversible commands to history', async () => {
+    it("should not add non-reversible commands to history", async () => {
         // Create a non-reversible command (no $undoCommand)
         const normalCommand = {
-            $type: 'NormalCommand',
-            payload: { value: 'normal' }
+            $type: "NormalCommand",
+            payload: { value: "normal" },
         };
 
         // Register handler for normal command
-        commandBus.registerHandler('NormalCommand', handlerSpy);
+        commandBus.registerHandler("NormalCommand", handlerSpy);
 
         // Execute the normal command
         await commandBus.executeCommand(normalCommand);
@@ -100,16 +105,16 @@ describe('Command History Integration Tests', () => {
         expect(commandBus.historyManager.undoStack.value).toHaveLength(0);
     });
 
-    it('should maintain correct history after multiple operations', async () => {
+    it("should maintain correct history after multiple operations", async () => {
         // Create multiple commands
-        const command1 = { ...reversibleCommand, $type: 'Command1' };
-        const command2 = { ...reversibleCommand, $type: 'Command2' };
+        const command1 = { ...reversibleCommand, $type: "Command1" };
+        const command2 = { ...reversibleCommand, $type: "Command2" };
 
         // Register handlers
-        commandBus.registerHandler('Command1', handlerSpy);
-        commandBus.registerHandler('Command2', handlerSpy);
-        commandBus.registerHandler(command1.$undoCommand!.$type, handlerSpy);
-        commandBus.registerHandler(command2.$undoCommand!.$type, handlerSpy);
+        commandBus.registerHandler("Command1", handlerSpy);
+        commandBus.registerHandler("Command2", handlerSpy);
+        commandBus.registerHandler(command1.$undoCommand.$type, handlerSpy);
+        commandBus.registerHandler(command2.$undoCommand.$type, handlerSpy);
 
         // Execute commands and perform undo/redo operations
         await commandBus.executeCommand(command1);
@@ -118,18 +123,24 @@ describe('Command History Integration Tests', () => {
 
         // Verify state after operations
         expect(commandBus.historyManager.undoStack.value).toHaveLength(1);
-        expect(commandBus.historyManager.undoStack.value[0].$type).toBe('Command1');
+        expect(commandBus.historyManager.undoStack.value[0].$type).toBe(
+            "Command1",
+        );
         expect(commandBus.historyManager.redoStack.value).toHaveLength(1);
-        expect(commandBus.historyManager.redoStack.value[0].$type).toBe('Command2');
+        expect(commandBus.historyManager.redoStack.value[0].$type).toBe(
+            "Command2",
+        );
 
         // Execute a new command - should clear redo stack
-        const command3 = { ...reversibleCommand, $type: 'Command3' };
-        commandBus.registerHandler('Command3', handlerSpy);
+        const command3 = { ...reversibleCommand, $type: "Command3" };
+        commandBus.registerHandler("Command3", handlerSpy);
         await commandBus.executeCommand(command3);
 
         // Verify redo stack was cleared and new command added to undo stack
         expect(commandBus.historyManager.undoStack.value).toHaveLength(2);
-        expect(commandBus.historyManager.undoStack.value[1].$type).toBe('Command3');
+        expect(commandBus.historyManager.undoStack.value[1].$type).toBe(
+            "Command3",
+        );
         expect(commandBus.historyManager.redoStack.value).toHaveLength(0);
     });
 });

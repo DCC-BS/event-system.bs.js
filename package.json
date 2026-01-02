@@ -26,7 +26,8 @@
         "dev:build": "nuxi build playground",
         "dev:prepare": "nuxt-module-build build --stub && nuxt-module-build prepare && nuxi prepare playground",
         "release": "bun lint && bun run test && bun prepack && changelogen --release && git push --follow-tags",
-        "lint": "eslint .",
+        "lint": "biome lint .",
+        "check": "biome check --fix .",
         "test": "vitest run",
         "test:watch": "vitest watch",
         "test:types": "vue-tsc --noEmit && cd playground && vue-tsc --noEmit"
@@ -48,6 +49,7 @@
         "publish-to-git": "^1.2.0",
         "typescript": "~5.9.0",
         "vitest": "^4.0.0",
-        "vue-tsc": "^3.0.4"
+        "vue-tsc": "^3.0.4",
+        "@biomejs/biome": "^2.3.10"
     }
 }

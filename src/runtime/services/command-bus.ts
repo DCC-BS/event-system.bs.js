@@ -1,13 +1,22 @@
-import type { CommandType, ICommand, IReversibleCommand } from "../models/commands";
+import type {
+    CommandType,
+    ICommand,
+    IReversibleCommand,
+} from "../models/commands";
 import { CommandHistoryManager } from "./command-history-manager";
 
-export type CommandHandler<TCommand extends ICommand> = (command: TCommand) => Promise<void>;
+export type CommandHandler<TCommand extends ICommand> = (
+    command: TCommand,
+) => Promise<void>;
 
 /**
  * CommandBus is responsible for registering, unregistering, and executing command handlers.
  */
 export class CommandBus {
-    private commandHandlers = {} as Record<CommandType, CommandHandler<ICommand>[]>;
+    private commandHandlers = {} as Record<
+        CommandType,
+        CommandHandler<ICommand>[]
+    >;
     private readonly _historyManager = new CommandHistoryManager(this);
 
     public get historyManager() {
@@ -20,9 +29,15 @@ export class CommandBus {
      * @param commandType - The type of command to handle.
      * @param handler - The handler function to execute when the command is received.
      */
-    public registerHandler<TCommand extends ICommand>(commandType: CommandType, handler: CommandHandler<TCommand>) {
-        this.commandHandlers[commandType] = this.commandHandlers[commandType] || [];
-        this.commandHandlers[commandType].push(handler as CommandHandler<ICommand>);
+    public registerHandler<TCommand extends ICommand>(
+        commandType: CommandType,
+        handler: CommandHandler<TCommand>,
+    ) {
+        this.commandHandlers[commandType] =
+            this.commandHandlers[commandType] || [];
+        this.commandHandlers[commandType].push(
+            handler as CommandHandler<ICommand>,
+        );
     }
 
     /**
@@ -31,10 +46,13 @@ export class CommandBus {
      * @param commandType - The type of command to stop handling.
      * @param handler - The handler function to remove.
      */
-    public unregisterHandler<TCommand extends ICommand>(commandType: CommandType, handler: CommandHandler<TCommand>) {
+    public unregisterHandler<TCommand extends ICommand>(
+        commandType: CommandType,
+        handler: CommandHandler<TCommand>,
+    ) {
         const handlers = this.commandHandlers[commandType];
         if (handlers) {
-            const index = handlers.findIndex(h => h === handler);
+            const index = handlers.indexOf(handler as CommandHandler<ICommand>);
             if (index >= 0) {
                 handlers.splice(index, 1);
             }
@@ -54,8 +72,11 @@ export class CommandBus {
             }
 
             // Add to history if it's a reversible command and implements IUndoCommand
-            if (history && this._historyManager &&
-                this.isReversibleCommand(command)) {
+            if (
+                history &&
+                this._historyManager &&
+                this.isReversibleCommand(command)
+            ) {
                 this._historyManager.addToHistory(command);
             }
         }
@@ -63,10 +84,12 @@ export class CommandBus {
 
     /**
      * Type guard to check if a command is reversible
-     * 
+     *
      * @param command - The command to check
      */
-    private isReversibleCommand(command: ICommand): command is IReversibleCommand {
-        return '$undoCommand' in command && command.$undoCommand !== undefined;
+    private isReversibleCommand(
+        command: ICommand,
+    ): command is IReversibleCommand {
+        return "$undoCommand" in command && command.$undoCommand !== undefined;
     }
 }

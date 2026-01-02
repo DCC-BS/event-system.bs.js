@@ -1,5 +1,5 @@
-import { CommandBus } from "../services/command-bus";
 import { onUnmounted } from "vue";
+import { CommandBus } from "../services/command-bus";
 
 type CommandHandler = (command: unknown) => Promise<void>;
 
@@ -29,7 +29,6 @@ export const useCommandBus = () => {
             bus.unregisterHandler(key, handler);
         }
     });
-
 
     return {
         /**
@@ -67,5 +66,5 @@ export const useCommandBus = () => {
          * @param callback - The handler function to execute when the command is received.
          */
         onCommand,
-    }
-}
+    };
+};

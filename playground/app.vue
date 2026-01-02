@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { onMounted, onUnmounted } from 'vue';
-import type { ICommand } from '../src/runtime/models/commands';
 import { useCommandBus } from '../src/runtime/composables/useCommandBus';
+import type { ICommand } from '../src/runtime/models/commands';
 
 class MyComannd implements ICommand {
     $type = 'MyCommand';

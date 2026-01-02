@@ -1,35 +1,36 @@
-import { describe, it, expect } from 'vitest';
-import type { ICommand } from '../src/runtime/models/commands';
-import { CommandBus } from '../src/runtime/services/command-bus';
-
+import { describe, expect, it } from "vitest";
+import type { ICommand } from "../src/runtime/models/commands";
+import { CommandBus } from "../src/runtime/services/command-bus";
 
 class TestCommand implements ICommand {
     readonly $type = "TestCommand";
 
-    constructor(public readonly message: string) { }
+    constructor(public readonly message: string) {}
 }
 
-describe('CommandBus', () => {
-    it('should register a handler', async () => {
+describe("CommandBus", () => {
+    it("should register a handler", async () => {
         const bus = new CommandBus();
-        const handler = async (_: TestCommand) => { };
+        const handler = async (_: TestCommand) => {};
 
         bus.registerHandler("TestCommand", handler);
 
-        expect(bus['commandHandlers']["TestCommand"]).toContain(handler);
+        // biome-ignore lint/complexity/useLiteralKeys: accessing private member for testing
+        expect(bus["commandHandlers"].TestCommand).toContain(handler);
     });
 
-    it('should unregister a handler', async () => {
+    it("should unregister a handler", async () => {
         const bus = new CommandBus();
-        const handler = async (_: TestCommand) => { };
+        const handler = async (_: TestCommand) => {};
 
         bus.registerHandler("TestCommand", handler);
         bus.unregisterHandler("TestCommand", handler);
 
-        expect(bus['commandHandlers']["TestCommand"]).not.toContain(handler);
+        // biome-ignore lint/complexity/useLiteralKeys: accessing private member for testing
+        expect(bus["commandHandlers"].TestCommand).not.toContain(handler);
     });
 
-    it('should execute registered handlers', async () => {
+    it("should execute registered handlers", async () => {
         const bus = new CommandBus();
         const handledCommands: ICommand[] = [];
         const handler = async (command: TestCommand) => {
@@ -43,7 +44,7 @@ describe('CommandBus', () => {
         expect(handledCommands).toContain(command);
     });
 
-    it('should not execute unregistered handlers', async () => {
+    it("should not execute unregistered handlers", async () => {
         const bus = new CommandBus();
         const handledCommands: ICommand[] = [];
         const handler = async (command: TestCommand) => {
