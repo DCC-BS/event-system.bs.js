@@ -34,5 +34,5 @@ function onClick() {
 
 <template>
     <div>basic</div>
-    <button @click="onClick">Click me</button>
+    <button type="button" @click="onClick">Click me</button>
 </template>
