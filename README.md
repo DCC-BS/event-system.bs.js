@@ -100,6 +100,26 @@ By default, executed commands that implement `IReversibleCommand` are automatica
 executeCommand(new MyCommand('prop value'), false);
 ```
 
+## Best Practice
+
+The `CommandBus` relies on string keys to identify the right Command, to prevent misspelling in the command keys it is best practice to create Map with all the key:
+```ts
+export const Cmds = {
+    MyCommand: "MyCommand",
+}
+
+class MyCommand implements ICommand {
+    readonly $type = Cmds.MyCommand;
+
+    constructor(public myProperty: string) {}
+}
+
+onCommand<MyCommand>(Cmds.MyCommand, async (command) => {
+    // Handle the command
+});
+```
+This also enables easier refactoring of the keys.
+
 ## Undo / Redo (Command History)
 
 Commands that implement the `IReversibleCommand` interface are automatically tracked in the command history, enabling undo and redo operations.
