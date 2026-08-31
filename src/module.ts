@@ -19,7 +19,7 @@ export default defineNuxtModule({
         addImportsDir(resolver.resolve("./runtime/composables"));
         addTypeTemplate({
             filename: "types/commands.d.ts",
-            src: resolver.resolve("./runtime/models/commands.d.ts"),
+            src: resolver.resolve("./runtime/models/commands.ts"),
         });
     },
 });
