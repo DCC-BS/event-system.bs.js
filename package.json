@@ -2,6 +2,9 @@
     "name": "@dcc-bs/event-system.bs.js",
     "version": "1.4.4",
     "description": "Contains a Command bus for handling commands",
+    "repository": {
+        "url": "https://github.com/DCC-BS/event-system.bs.js"
+    },
     "license": "MIT",
     "type": "module",
     "exports": {
@@ -48,5 +51,8 @@
         "vitest": "^5.0.0",
         "vue-tsc": "^3.2.6",
         "@biomejs/biome": "2.5.15"
+    },
+    "publishConfig": {
+        "access": "public"
     }
 }
