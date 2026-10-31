@@ -46,7 +46,7 @@
         "changelogen": "^0.6.2",
         "eslint": "^10.1.0",
         "nuxt": "^4.4.2",
-        "typescript": "~6.0.2",
+        "typescript": "~7.0.0",
         "vitest": "^5.0.0",
         "vue-tsc": "^3.2.6",
         "@biomejs/biome": "2.5.15"
